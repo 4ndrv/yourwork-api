@@ -6,6 +6,8 @@ const verifyAuth = async (req, res, next) => {
     if (!authHeader) return res.status(400).json({ error: "Access Denied! You must login to continue your actions." })
     const token = authHeader.split(' ')[1];
     const userId = jwt.decode(token)._id;
+    if (userId == null) return res.status(400).json({ error: "Your Token was broken!" })
+    console.log(userId)
     try {
         const user = await User.findOne({ _id: userId })
         if (user) {

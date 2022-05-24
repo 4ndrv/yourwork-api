@@ -65,4 +65,28 @@ router.get('/logout', verifyAuth, async (req, res) => {
 
 })
 
+router.get("/", verifyAuth, (req, res) => {
+    try {
+        if (!req.userId) return res.status(400).json({ error: "Can't not get user!" });
+        User.findById(req.userId, (err, data) => {
+            if (data) return res.status(200).json(data);
+            else return res.status(400).json({ error: "User doesnt exist!!" })
+        })
+    } catch (err) {
+        console.log(err)
+    }
+})
+router.put("/password", verifyAuth, (req, res) => {
+    try {
+        if (!req.userId) return res.status(400).json({ error: "Can't not get user!" });
+        User.findByIdAndUpdate(req.userId, { password: req.query.value }, (err, data) => {
+            if (err) return res.status(400).json(err);
+            return res.status(200).json({ message: "Change password successfully!" })
+        })
+    } catch (err) {
+        console.log(err)
+    }
+})
+
+
 module.exports = router;
